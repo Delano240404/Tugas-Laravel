@@ -1,49 +1,43 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 
-// Rute Halaman Utama & Informasi
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route Login & Logout
+Route::get('/login', [LoginController::class, 'create'])->name('login');
+Route::post('/login', [LoginController::class, 'store']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/about', function () {
-    return 'Profil Toko: POS Barokah Mart menyediakan kebutuhan sehari-hari.';
-});
-
-Route::get('/suppliers', function () {
-    return view('supplier.index');
-});
-
-// Rute Authentikasi (Login & Logout)
-Route::get('/login', [LoginController::class, 'create'])->middleware('guest')->name('login');
-Route::post('/login', [LoginController::class, 'store'])->middleware('guest')->name('login.store');
-Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
-
-// Rute Terproteksi Login
+// Route dengan Autentikasi
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});
 
-// Rute Khusus Admin
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/categories', function () {
-        return 'Halaman Kelola Kategori (Khusus Admin)';
-    });
-    Route::get('/products', function () {
-        return 'Halaman Kelola Produk (Khusus Admin)';
-    });
-    
-    // Latihan No. 1: Rute /users khusus admin
-    Route::resource('users', UserController::class);
-});
-
-// Rute Kasir & Admin
-Route::middleware(['auth', 'role:admin,kasir'])->group(function () {
+    // Route Transaksi POS
     Route::get('/pos', function () {
-        return 'Halaman Kasir (POS)';
+        return view('supplier.index');
     })->name('pos.index');
+
+    Route::get('/pos/history', function () {
+        return 'Halaman Riwayat Transaksi';
+    })->name('pos.history');
+
+    // Route Khusus Admin
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/categories', function () {
+            return 'Halaman Kategori';
+        })->name('categories.index');
+
+        Route::get('/products', function () {
+            return 'Halaman Produk';
+        })->name('products.index');
+
+        Route::get('/report/sales', function () {
+            return 'Halaman Laporan Penjualan';
+        })->name('report.sales');
+
+        Route::get('/users', function () {
+            return 'Halaman Kelola Akun Kasir';
+        })->name('users.index');
+    });
 });

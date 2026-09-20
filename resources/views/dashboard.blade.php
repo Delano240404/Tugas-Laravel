@@ -1,21 +1,14 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard - POS Barokah Mart</title>
-    @vite('resources/css/app.css')
-</head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-sm">
-        <h1 class="text-2xl font-bold mb-2">Dashboard</h1>
-        <p class="text-gray-600 mb-6">Selamat datang di Sistem POS Barokah Mart!</p>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
+    </x-slot>
 
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
-                Logout
-            </button>
-        </form>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <x-card>
+                <h3 class="text-lg font-semibold mb-2">Ringkasan Hari Ini</h3>
+                <p class="text-gray-600">Selamat datang, {{ auth()->user()->name }}.</p>
+            </x-card>
+        </div>
     </div>
-</body>
-</html>
+</x-app-layout>
